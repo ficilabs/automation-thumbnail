@@ -1,9 +1,9 @@
-- name: Install deps
+name: Install deps
   run: |
     npm install
     npx playwright install --with-deps
 
-- name: Run script
+name: Run script
   run: node generate-thumbnail.js
   env:
     URL: https://mohrofiqi.vercel.app
