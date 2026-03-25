@@ -1,9 +1,36 @@
-name: Install deps
-run: |
-  npm install
-  npx playwright install --with-deps
+name: 📸 Thumbnail
 
-name: Run script
-run: node generate-thumbnail.js
-env:
-  URL: https://mohrofiqi.vercel.app
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 📦 Install Dependencies
+        run: |
+          npm install
+          npx playwright install --with-deps
+
+      - name: 📸 Generate Thumbnail
+        run: node generate-thumbnail.js
+        env:
+          URL: ${{ secrets.URL }}
+
+      - name: 💾 Commit & Push
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add thumbnails/
+          git commit -m "📸 update thumbnail" || echo "no changes"
+          git push
