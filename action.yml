@@ -1,0 +1,36 @@
+name: 'Generate Thumbnail'
+description: 'Screenshot a URL and save as thumbnail'
+
+inputs:
+  url:
+    description: 'URL to screenshot'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 🟢 Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: 📦 Install Dependencies
+      run: npm install
+      shell: bash
+      working-directory: ${{ github.action_path }}  # 🔥 otomatis arah ke repo action
+
+    - name: 🎭 Install Playwright
+      run: npx playwright install --with-deps chromium
+      shell: bash
+      working-directory: ${{ github.action_path }}
+
+    - name: 📸 Generate Thumbnail
+      run: node generate-thumbnail.js
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      env:
+        URL: ${{ inputs.url }}
+
+    - name: 💾 Copy thumbnails to caller repo
+      run: cp -r ${{ github.action_path }}/thumbnails ./thumbnails
+      shell: bash
