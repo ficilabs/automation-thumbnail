@@ -28,7 +28,7 @@ jobs:
       - name: 📸 Generate Thumbnail
         run: node generate-thumbnail.js
         env:
-          URL: https://talkled-ficilabs.vercel.app/
+          URL: https://www.claudiabdm.com
 
       - name: 💾 Commit & Push
         run: |
