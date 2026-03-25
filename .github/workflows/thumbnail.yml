@@ -28,7 +28,7 @@ jobs:
       - name: 📸 Generate Thumbnail
         run: node generate-thumbnail.js
         env:
-          URL: https://mohrofiqi.vercel.app/
+          URL: https://talkled-ficilabs.vercel.app/
 
       - name: 💾 Commit & Push
         run: |
