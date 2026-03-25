@@ -25,7 +25,7 @@ jobs:
       - name: 📸 Generate Thumbnail
         run: node generate-thumbnail.js
         env:
-          URL: ${{ secrets.URL }}
+          URL: https://mohrofiqi.vercel.app/
 
       - name: 💾 Commit & Push
         run: |
