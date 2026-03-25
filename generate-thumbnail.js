@@ -34,9 +34,12 @@ const fileName = getFileName(url);
     height: 720
   });
 
-  await page.goto(url, { waitUntil: 'networkidle' });
-  await page.waitForTimeout(2000);
-
+  await page.goto(url, { 
+    waitUntil: 'domcontentloaded',  // 🔥 lebih cepat & toleran
+    timeout: 60000                   // 🔥 naikkan timeout jadi 60 detik
+  });
+  await page.waitForTimeout(3000);   // tunggu render selesai
+  
   const buffer = await page.screenshot();
 
   await sharp(buffer)
