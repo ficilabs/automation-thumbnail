@@ -6,4 +6,4 @@
 - name: Run script
   run: node generate-thumbnail.js
   env:
-    URL: ${{ secrets.URL }}
+    URL: https://mohrofiqi.vercel.app
