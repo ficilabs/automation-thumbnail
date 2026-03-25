@@ -1,8 +1,11 @@
 name: 📸 Thumbnail
 
 on:
-  push:
-    branches: [ main ]
+  workflow_call:
+    inputs:
+      url:
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -20,7 +23,6 @@ jobs:
         with:
           node-version: 18
 
-      # ✅ Cache 1: node_modules
       - name: 📦 Cache node_modules
         uses: actions/cache@v4
         id: cache-npm
@@ -34,7 +36,6 @@ jobs:
         if: steps.cache-npm.outputs.cache-hit != 'true'
         run: npm install
 
-      # ✅ Cache 2: Playwright browsers
       - name: 🎭 Cache Playwright browsers
         uses: actions/cache@v4
         id: cache-playwright
@@ -51,7 +52,7 @@ jobs:
       - name: 📸 Generate Thumbnail
         run: node generate-thumbnail.js
         env:
-          URL: https://mohrofiqi.vercel.app/
+          URL: ${{ inputs.url }}
 
       - name: 💾 Commit & Push
         run: |
