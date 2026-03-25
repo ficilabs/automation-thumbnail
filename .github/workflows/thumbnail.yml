@@ -20,10 +20,33 @@ jobs:
         with:
           node-version: 18
 
+      # ✅ Cache 1: node_modules
+      - name: 📦 Cache node_modules
+        uses: actions/cache@v4
+        id: cache-npm
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
       - name: 📦 Install Dependencies
-        run: |
-          npm install
-          npx playwright install --with-deps
+        if: steps.cache-npm.outputs.cache-hit != 'true'
+        run: npm install
+
+      # ✅ Cache 2: Playwright browsers
+      - name: 🎭 Cache Playwright browsers
+        uses: actions/cache@v4
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: 🎭 Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
 
       - name: 📸 Generate Thumbnail
         run: node generate-thumbnail.js
