@@ -1,0 +1,9 @@
+- name: Install deps
+  run: |
+    npm install
+    npx playwright install --with-deps
+
+- name: Run script
+  run: node generate-thumbnail.js
+  env:
+    URL: ${{ secrets.URL }}
