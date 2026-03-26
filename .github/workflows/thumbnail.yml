@@ -1,11 +1,8 @@
 name: 📸 Thumbnail
 
 on:
-  workflow_call:
-    inputs:
-      url:
-        required: true
-        type: string
+  push:
+    branches: [ main ]
 
 permissions:
   contents: write
@@ -17,15 +14,13 @@ jobs:
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
-        with:
-          repository: ficilabs/automation-thumbnail
-          ref: main
 
       - name: 🟢 Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      # ✅ Cache 1: node_modules
       - name: 📦 Cache node_modules
         uses: actions/cache@v4
         id: cache-npm
@@ -34,11 +29,11 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
-
       - name: 📦 Install Dependencies
         if: steps.cache-npm.outputs.cache-hit != 'true'
         run: npm install
 
+      # ✅ Cache 2: Playwright browsers
       - name: 🎭 Cache Playwright browsers
         uses: actions/cache@v4
         id: cache-playwright
@@ -47,7 +42,6 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-playwright-
-
       - name: 🎭 Install Playwright browsers
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
@@ -55,7 +49,7 @@ jobs:
       - name: 📸 Generate Thumbnail
         run: node generate-thumbnail.js
         env:
-          URL: ${{ inputs.url }}
+          URL: https://mohrofiqi.vercel.app/
 
       - name: 💾 Commit & Push
         run: |
